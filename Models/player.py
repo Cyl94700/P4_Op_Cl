@@ -11,6 +11,7 @@ class Player:
         self.gender = gender
         self.rank = rank
         self.score = 0.0
+        self.color = ""
         self.opponents = []
         self.player_db = TinyDB('database/players.json')
 
@@ -24,6 +25,7 @@ class Player:
             "gender": self.gender,
             "rank": self.rank,
             "score": self.score,
+            "color": self.color,
             "opponents": self.opponents
         }
 

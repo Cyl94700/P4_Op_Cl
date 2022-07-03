@@ -3,53 +3,72 @@ from Models.tournament import Tournament
 from Models.player import Player
 from Controllers.tournament_control import TournamentController
 from Controllers.reports_control import ReportsController
+import datetime
 
 
 class MenuController:
-
     def __init__(self):
-        self.menu_view = MenuViews()
-        self.tournament_control = TournamentController()
+        # self.menu_view = MenuViews()
+        self.tournament_controller = TournamentController()
         self.reports_control = ReportsController()
 
     def main_menu_start(self):
         """Menu principal qui renvoie vers les sous-menus"""
+        MenuViews.application_title()
+        menu_lines = ["Créer un tournoi",
+                      "Charger un tournoi",
+                      "Créer un joueur",
+                      "Modifier un joueur",
+                      "Rapport",
+                      ]
+        MenuViews.main_menu(menu_lines)
+        MenuViews.input_option()
+        user_input = input()
+        length_menu = int(len(menu_lines))
+        valid_strings = ["q"]
+        # contrôle de saisie
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        if result is True:
+            if user_input == "1":
+                    self.new_tournament()
 
-        self.menu_view.main_menu()
-        self.menu_view.input_option()
-        user_input = input().lower()
+            elif user_input == "2":
+                self.load_tournament()
 
-        if user_input == "1":
-            self.new_tournament()
+            elif user_input == "3":
+                self.new_player()
 
-        elif user_input == "2":
-            self.load_tournament()
+            elif user_input == "4":
+                self.update_player()
 
-        elif user_input == "3":
-            self.new_player()
+            elif user_input == "5":
+                self.reports_menu()
 
-        elif user_input == "4":
-            self.update_player()
-
-        elif user_input == "5":
-            self.reports_menu()
-
-        elif user_input == "q":
-            self.menu_view.sure_exit()
-            user_input = input().lower()
-
-            if user_input == "o":
-                exit()
-            elif user_input == "n":
-                self.main_menu_start()
+            elif user_input == "q":
+                MenuViews.sure_exit()
+                user_input = input()
+                valid_strings = ["o", "n"]
+                length_menu = 0
+                # contrôle de saisie
+                result = self.input_validation(user_input, length_menu, valid_strings)
+                while result is False:
+                    MenuViews.input_error()
+                    MenuViews.sure_exit()
+                    user_input = input()
+                    # contrôle de saisie
+                    result = self.input_validation(user_input, length_menu, valid_strings)
+                if user_input == "o":
+                    exit()
+                elif user_input == "n":
+                    self.main_menu_start()
 
         else:
-            self.menu_view.input_error()
+            MenuViews.input_error()
             self.main_menu_start()
 
     def new_tournament(self):
         """Création nouveau tournoi en base de données"""
-        self.menu_view.create_tournament_header()
+        MenuViews.create_tournament_header()
         tournament_info = []
         options = [
             "le nom",
@@ -58,10 +77,14 @@ class MenuController:
         ]
 
         for item in options:
-            self.menu_view.input_text(item)
+            MenuViews.input_text(item)
             user_input = input()
             # Cohérence saisie
-            user_input = self.not_enter_input(user_input, item)
+            response = self.input_control_required_data(user_input)
+            while response is False:
+                MenuViews.input_error()
+                MenuViews.input_text(item)
+                user_input = input()
 
             if user_input == "r":
                 self.main_menu_start()
@@ -72,18 +95,25 @@ class MenuController:
         tournament_info.append(self.input_time_control())
         tour_players = self.select_players(8)
 
-        self.menu_view.review_tournament(tournament_info, tour_players)
-        user_input = input().lower()
+        MenuViews.review_tournament(tournament_info, tour_players)
+        user_input = input()
+        length_menu = 0
+        valid_strings = ["o", "n"]
         # saisie obligatoire et cohérence
-        while user_input == '' or user_input not in (["o", "n"]):
-            self.menu_view.review_tournament(tournament_info, tour_players)
-            user_input = input().lower()
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            MenuViews.review_tournament(tournament_info, tour_players)
+            user_input = input()
+            # contrôle de saisie
+            result = self.input_validation(user_input, length_menu, valid_strings)
         if user_input == "o":
             tournament = Tournament(
                 t_id=0,
                 name=tournament_info[0],
                 place=tournament_info[1],
                 date="Non débuté",
+                end_date="Non terminé",
                 description=tournament_info[2],
                 time_control=tournament_info[3],
                 players=tour_players,
@@ -91,16 +121,20 @@ class MenuController:
                 rounds=[]
             )
             tournament.save_tournament_db()
-            self.menu_view.tournament_saved()
+            MenuViews.tournament_saved()
 
-            self.menu_view.start_tournament()
+            MenuViews.start_tournament()
             user_input = input()
-            # saisie obligatoire
-            while user_input == '' or user_input not in (["o", "n"]):
-                self.menu_view.start_tournament()
+            # saisie obligatoire et cohérence
+            result = self.input_validation(user_input, length_menu, valid_strings)
+            while result is False:
+                MenuViews.input_error()
+                MenuViews.start_tournament()
                 user_input = input()
+                # contrôle de saisie
+                result = self.input_validation(user_input, length_menu, valid_strings)
             if user_input == "o":
-                self.tournament_control.start_tournament(tournament)
+                self.tournament_controller.start_tournament(tournament)
             elif user_input == "n":
                 self.main_menu_start()
 
@@ -108,11 +142,11 @@ class MenuController:
             self.main_menu_start()
 
     def input_time_control(self):
-        """Select le contrôle du temps d'un tournoi
+        """Selectionne le contrôle du temps d'un tournoi
         @return: time control (str)
         """
-        self.menu_view.time_control_option()
-        self.menu_view.input_option()
+        MenuViews.time_control_option()
+        MenuViews.input_option()
         user_input = input()
 
         if user_input == "1":
@@ -123,7 +157,7 @@ class MenuController:
             return "Rapid"
 
         else:
-            self.menu_view.input_error()
+            MenuViews.input_error()
             self.input_time_control()
 
     def select_players(self, players_total):
@@ -140,15 +174,15 @@ class MenuController:
 
         i = 0
         while i < players_total:
-            self.menu_view.select_players(players, i+1)
-            self.menu_view.input_option()
+            MenuViews.select_players(players, i+1)
+            MenuViews.input_option()
             user_input = input()
 
             if user_input == "r":
                 self.main_menu_start()
 
             elif not user_input.isdigit():
-                self.menu_view.input_error()
+                MenuViews.input_error()
 
             elif int(user_input) in id_list:
                 index = id_list.index(int(user_input))
@@ -158,7 +192,7 @@ class MenuController:
                 i += 1
 
             else:
-                self.menu_view.player_already_selected()
+                MenuViews.player_out_of_bounds()
 
         return tour_players
 
@@ -166,18 +200,19 @@ class MenuController:
         """Choix d'un tournoi à charger"""
         tournament = Tournament.load_tournament_db()
 
-        self.menu_view.select_tournament(tournament)
-        self.menu_view.input_option()
+        MenuViews.select_tournament(tournament)
+        MenuViews.input_option()
         user_input = input()
-        int_user_input = int(user_input)
-        # Total des lignes de tournament
-        t_id = len(tournament)
-        # Cohérence saisie :
-        while user_input == '' or int_user_input > t_id or int_user_input == 0:
-            self.menu_view.select_tournament(tournament)
-            self.menu_view.input_option()
+        length_menu = int(len(tournament))
+        valid_strings = ["r"]
+        # contrôle de saisie
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            MenuViews.input_option()
             user_input = input()
-            int_user_input = int(user_input)
+            result = self.input_validation(user_input, length_menu, valid_strings)
+
         if user_input == "r":
             self.main_menu_start()
 
@@ -189,6 +224,7 @@ class MenuController:
                     t["name"],
                     t["place"],
                     t["date"],
+                    t["end_date"],
                     t["time_control"],
                     t["current_round"],
                     t["players"],
@@ -196,35 +232,77 @@ class MenuController:
                     t["nb_rounds"],
                     t["description"]
                 )
-                self.tournament_control.start_tournament(t)
+                self.tournament_controller.start_tournament(t)
 
     def new_player(self):
         """Création d'un nouveau joueur en base"""
-        self.menu_view.create_new_player_header()
+        MenuViews.create_new_player_header()
         player_info = []
         options = [
             "le nom",
             "le prénom",
             "la date de naissance (jj/mm/aaaa)",
             "le genre [M/F]",
-            "la rang"
+            "le rang (entre 1 et 10 000)"
         ]
+        i = 0
         for item in options:
-            self.menu_view.input_text(item)
+            MenuViews.input_text(item)
             user_input = input()
-            # Cohérence saisie
-            user_input = self.not_enter_input(user_input, item)
+            # Saisie obligaoire pour nom et prénom
+            if i <= 1:
+                response = self.input_control_required_data(user_input)
+                while response is False:
+                    MenuViews.input_error()
+                    MenuViews.input_text(item)
+                    user_input = input()
+                    response = self.input_control_required_data(user_input)
+            # controle de la date
+            if i == 2:
+                response = self.validate(user_input)
+                while response is False and user_input != "r":
+                    MenuViews.date_error()
+                    MenuViews.input_text(item)
+                    user_input = input()
+                    response = self.validate(user_input)
+            # Contrôle Genre
+            if i == 3:
+                length_menu = 0
+                valid_strings = ["M", "F", "r"]
+                result = self.input_validation(user_input, length_menu, valid_strings)
+                while result is False:
+                    MenuViews.input_error()
+                    MenuViews.input_text(item)
+                    user_input = input()
+                    result = self.input_validation(user_input, length_menu, valid_strings)
+            # contrôle Rang
+            if i == 4:
+                length_menu = 10000
+                valid_strings = ["r"]
+                result = self.input_validation(user_input, length_menu, valid_strings)
+                while result is False:
+                    MenuViews.input_error()
+                    MenuViews.input_text(item)
+                    user_input = input()
+                    result = self.input_validation(user_input, length_menu, valid_strings)
+            i += 1
+
             if user_input == "r":
                 self.main_menu_start()
             else:
                 player_info.append(user_input)
 
         MenuViews.review_player(player_info)
-        user_input = input().lower()
-        # saisie obligatoire
-        while user_input == '' or user_input not in (["o", "n"]):
+        user_input = input()
+        # Controle réponse sauvegarde
+        length_menu = 0
+        valid_strings = ["o", "n"]
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
             MenuViews.review_player(player_info)
-            user_input = input().lower
+            user_input = input()
+            result = self.input_validation(user_input, length_menu, valid_strings)
 
         if user_input == "o":
             player = Player(
@@ -237,7 +315,7 @@ class MenuController:
             )
 
             player.save_player_db()
-            self.menu_view.player_saved()
+            MenuViews.player_saved()
             self.main_menu_start()
 
         elif user_input == "n":
@@ -247,26 +325,17 @@ class MenuController:
         """Modifier un joueur"""
         players = Player.load_player_db()
 
-        self.menu_view.select_players(players, "à modifier")
-        self.menu_view.input_option()
+        MenuViews.select_players(players, "à modifier")
+        MenuViews.input_option()
         user_input = input()
-        # Nombre de lignes de la liste "players"
-        p_id = len(players)
-        # "user_input" numérique ?
-        result = self.numeric(user_input)
-        if result is True:
-            int_user_input = int(user_input)
-        else:
-            int_user_input = -1
-        # Cohérence saisie :
-        while result is False and user_input != 'r' or result is True and int_user_input > p_id \
-                or result is True and int_user_input == 0:
-            self.menu_view.input_error()
-            self.menu_view.input_option()
+        length_menu = len(players)
+        valid_strings = ["r"]
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            MenuViews.input_option()
             user_input = input()
-            result = self.numeric(user_input)
-            if result is True:
-                int_user_input = int(user_input)
+            result = self.input_validation(user_input, length_menu, valid_strings)
 
         if user_input == "r":
             self.main_menu_start()
@@ -293,52 +362,91 @@ class MenuController:
             "prénom",
             "date de naissance (jj/mm/aaaa)",
             "genre [M/F]",
-            "rang"
+            "rang [1, 10 000]"
         ]
-        self.menu_view.update_player(p, french_options)
-        self.menu_view.input_option()
+        MenuViews.update_player(p, french_options)
+        MenuViews.input_option()
         user_input = input()
-        # user_input numérique ?
-        result = self.numeric(user_input)
-        if result is True:
-            int_user_input = int(user_input)
-        else:
-            int_user_input = -1
-        # Cohérence saisie :
-        while result is False and user_input != 'r' or result is True and int_user_input > len(options) \
-                or result is True and int_user_input == 0:
-            self.menu_view.input_error()
-            self.menu_view.input_option()
+        # Contrôle de saisie
+        length_menu = len(french_options)
+        valid_strings = ["r"]
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            MenuViews.input_option()
             user_input = input()
-            result = self.numeric(user_input)
-            if result is True:
-                int_user_input = int(user_input)
+            result = self.input_validation(user_input, length_menu, valid_strings)
+
         if user_input == "r":
             self.main_menu_start()
 
         elif int(user_input) <= len(options):
             updated_info = (options[int(user_input) - 1])
-            self.menu_view.input_text(
+            french_updated_info = (french_options[int(user_input) - 1])
+            MenuViews.input_text(
                 f"la nouvelle valeur {french_options[int(user_input) - 1]}")
             user_input = input()
-            # Saisie obligatoire :
-            while user_input == '':
-                self.menu_view.input_error()
-                self.menu_view.input_text(
-                    f"la nouvelle valeur {options[int(user_input) - 1]}")
-            if user_input == "r":
+
+            # Saisie obligaoire pour nom et prénom
+            if updated_info == "last_name" or updated_info == "first_name":
+                response = self.input_control_required_data(user_input)
+                while response is False:
+                    MenuViews.need_text()
+                    MenuViews.input_text(f"la nouvelle valeur {french_updated_info}")
+                    user_input = input()
+                    response = self.input_control_required_data(user_input)
+            # Contrôle date
+            elif updated_info == "birth_date":
+                response = self.validate(user_input)
+                while response is False and user_input != "r":
+                    MenuViews.date_error()
+                    MenuViews.input_text(f"la nouvelle valeur {french_updated_info}")
+                    user_input = input()
+                    response = self.validate(user_input)
+            # Contrôle genre
+            elif updated_info == "gender":
+                length_menu = 0
+                valid_strings = ["M", "F", "r"]
+                response = self.input_validation(user_input, length_menu, valid_strings)
+                while response is False:
+                    MenuViews.input_error()
+                    MenuViews.input_text(f"la nouvelle valeur {french_updated_info}")
+                    user_input = input()
+                    response = self.input_validation(user_input, length_menu, valid_strings)
+            # Contrôle rang
+            elif updated_info == "rank":
+                length_menu = 10000
+                valid_strings = ["r"]
+                response = self.input_validation(user_input, length_menu, valid_strings)
+                while response is False:
+                    MenuViews.input_error()
+                    MenuViews.input_text(f"la nouvelle valeur {french_updated_info}")
+                    user_input = input()
+                    response = self.input_validation(user_input, length_menu, valid_strings)
+            # Retour
+            elif user_input == "r":
                 self.main_menu_start()
 
-            else:
-                p.update_player_db(user_input, updated_info)
-                self.menu_view.player_saved()
-                self.update_player()
+            # Modification en base
+            p.update_player_db(user_input, updated_info)
+            MenuViews.player_saved()
+            self.update_player()
 
     def reports_menu(self):
         """Menu des Rapports"""
-        self.menu_view.reports_menu()
-        self.menu_view.input_option()
+        MenuViews.reports_menu()
+        MenuViews.input_option()
         user_input = input()
+
+        # Contrôle de saisie
+        length_menu = 5
+        valid_strings = ["r"]
+        response = self.input_validation(user_input, length_menu, valid_strings)
+        while response is False:
+            MenuViews.input_error()
+            MenuViews.input_option()
+            user_input = input()
+            response = self.input_validation(user_input, length_menu, valid_strings)
 
         if user_input == "1":
             self.player_reports_sorting(Player.load_player_db())
@@ -358,20 +466,20 @@ class MenuController:
         elif user_input == "r":
             self.main_menu_start()
 
-        else:
-            self.menu_view.input_error()
-            self.reports_menu()
-
-        self.menu_view.other_report()
+        MenuViews.other_report()
         user_input = input()
-        while user_input not in (["o", "n"]):
-            self.menu_view.input_error()
-            self.menu_view.other_report()
+        # Contrôle de saisie
+        length_menu = 0
+        valid_strings = ["o", "n"]
+        response = self.input_validation(user_input, length_menu, valid_strings)
+        while response is False:
+            MenuViews.input_error()
+            MenuViews.other_report()
             user_input = input()
+            response = self.input_validation(user_input, length_menu, valid_strings)
 
         if user_input == "o":
             self.reports_menu()
-
         elif user_input == "n":
             self.main_menu_start()
 
@@ -380,35 +488,45 @@ class MenuController:
         Sélectionne un tri des joueurs par nom ou par rang
         @paramètres "players" : liste des joueurs
         """
-        self.menu_view.reports_player_sorting()
-        self.menu_view.input_option()
+        MenuViews.reports_player_sorting()
+        MenuViews.input_option()
         user_input = input()
-
+        # saisie obligatoire et cohérence
+        length_menu = [1, 2]
+        valid_strings = ["r"]
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            MenuViews.input_option()
+            user_input = input()
+            result = self.input_validation(user_input, length_menu, valid_strings)
+        # Joueurs triés par nom
         if user_input == "1":
             self.reports_control.all_players_name(players)
-
+        # Joueurs triés par rang
         elif user_input == "2":
             self.reports_control.all_players_rank(players)
-
+        # Retour
         elif user_input == "r":
             self.main_menu_start()
+        """
+        # else:
+        if len(players) == 8:
+            MenuViews.input_error()
+            self.player_reports_sorting(players)
         else:
-            if len(players) == 8:
-                self.menu_view.input_error()
-                self.player_reports_sorting(players)
-
-            else:
-                self.menu_view.input_error()
-                self.player_reports_sorting(Player.load_player_db())
-
-    def not_enter_input(self, user_input, item):
+            MenuViews.input_error()
+            self.player_reports_sorting(Player.load_player_db())
+        """
+    @staticmethod
+    def input_control_required_data(user_input):
         """Saisie touche Entrée non autorisée
         """
-        while user_input == '':
-            self.menu_view.need_text()
-            self.menu_view.input_text(item)
-            user_input = input()
-        return user_input
+        if user_input == '':
+            response = False
+        else:
+            response = True
+        return response
 
     @staticmethod
     def numeric(user_input):
@@ -420,3 +538,41 @@ class MenuController:
         except ValueError:
             result = False
         return result
+
+    @staticmethod
+    def input_validation(user_input, len_limit, valid_strings):
+        """
+        Détermine si "user_input" est une valeur "numérique" ou "chaine" valide
+        @return = "True" ou "False"
+        """
+        response = user_input.isdigit()
+        if response is True:
+            if type(len_limit) is not list:
+                valid_int = []
+                for i in range(len_limit):
+                    i += 1
+                    valid_int.append(i)
+            else:
+                valid_int = len_limit
+            # saisie présente dans la liste des entiers autorisés ?
+            if int(user_input) in valid_int:
+                result = True
+            else:
+                result = False
+        else:
+            # saisie présente dans la liste des caractères autorisés ?
+            if user_input in valid_strings:
+                result = True
+            else:
+                result = False
+
+        return result
+
+    @staticmethod
+    def validate(date):
+        try:
+            datetime.datetime.strptime(date, '%d/%m/%Y')
+            response = True
+        except ValueError:
+            response = False
+        return response

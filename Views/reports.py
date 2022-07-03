@@ -29,19 +29,19 @@ class Reports:
         ]
 
         self.matches_report_field_names = [
-            "Nom P1",
-            "Rang P1",
-            "Score P1",
-            "Couleur P1",
+            "Joueur J1",
+            "Rang J1",
+            "Score J1",
+            "Couleur J1",
             " vs",
-            "Nom P2",
-            "Rang P2",
-            "Score P2",
-            "Couleur P2"
+            "Joueur J2",
+            "Rang J2",
+            "Score J2",
+            "Couleur J2"
         ]
 
         self.rounds_report_field_names = [
-            "Round #",
+            "# Rounds #",
             "Début",
             "fin",
             "Matches"
@@ -85,11 +85,11 @@ class Reports:
                 tournaments[i]["place"],
                 tournaments[i]["description"],
                 tournaments[i]["date"],
-                # tournaments[i]["end_date"],
+                tournaments[i]["end_date"],
                 tournaments[i]["time_control"],
                 str(tournaments[i]["current_round"]-1) + "/" + str(tournaments[i]["nb_rounds"]),
                 tournaments[i]["rounds"],
-                tournaments[i]["players"]
+                # tournaments[i]["players"]
             ])
 
         print("\n\n\n- Tournois -\n")
@@ -136,7 +136,7 @@ class Reports:
 
     @staticmethod
     def report_header(info):
-        """Entête de du rapport Tournoi
+        """Entête du rapport Tournoi
         @paramètres "info": tournoi (dict)
         """
         print("\n\n")
@@ -144,6 +144,7 @@ class Reports:
         h_1 = f"{info['name'].upper()}, {info['place'].title()} | Description : {info['description']}"
         h_2 = \
             f"Start date : {info['date']} | " \
+            f"End_date : {info['end_date']} | " \
             f"Time control : {info['time_control']} | " \
             f"Rounds played : {info['current_round']-1}/{info['nb_rounds']}"
 

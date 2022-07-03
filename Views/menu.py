@@ -10,13 +10,12 @@ class MenuViews:
         print("----------------------------------")
 
     @staticmethod
-    def main_menu():
+    def main_menu(menu_lines):
         print("\n\n=== MENU PRINCIPAL ===\n")
-        print("[1] Créer un tournoi")
-        print("[2] Charger un tournoi")
-        print("[3] Créer un joueur")
-        print("[4] Modifier un joueur")
-        print("[5] Rapport")
+        i = 0
+        for line in menu_lines:
+            i += 1
+            print("[" + str(i) + "]" + " " + line)
         print("\n[q] Quitter")
 
     @staticmethod
@@ -37,7 +36,7 @@ class MenuViews:
         @paramètres "info" : liste des infos input du tournoi
         @paramètres "players" : liste de 8 joueurs sélectionnés
         """
-        print("\n\nNouveau tournoi créé :\n")
+        print("\n\nNouveau tournoi à créer :\n")
         print(f"{info[0].upper()}, {info[1].title()}", end=' | ')
         print(f"Description : {info[2]}", end=' | ')
         print("Rounds : 4", end=' | ')
@@ -107,15 +106,15 @@ class MenuViews:
         print("\n\nNouveau Joueur :\n")
         print(f"{info[0]}, {info[1]}", end=' | ')
         print(f"Date de naissance: {info[2]}", end=' | ')
-        print(f"gender : {info[3]}", end=' | ')
-        print(f"rank : {info[4]}")
+        print(f"Genre : {info[3]}", end=' | ')
+        print(f"Rang : {info[4]}")
         print("\nVoulez-vous sauvegarder ? [o/n] ", end='')
 
     @staticmethod
     def update_player(p, options):
-        """infos joueur à modifier
+        """Infos joueur à modifier
         @paramètres "p" : joueur à modifier
-        @param "options" : option de modification
+        @paramètres "options" : option de modification
         """
         print("\n\n--- MODIDIER UN JOUEUR ---\n")
         print(f"Joueur {p.last_name}, {p.first_name}\n")
@@ -146,7 +145,7 @@ class MenuViews:
 
     @staticmethod
     def input_text(option):
-        print(f"\nEntrez {option} (ou taper [r] pour retourner au menu principal) : ", end='')
+        print(f"\nEntrez {option} ou tapez [r] pour retourner au menu principal : ", end='')
 
     @staticmethod
     def input_option():
@@ -158,11 +157,11 @@ class MenuViews:
 
     @staticmethod
     def input_error():
-        print("\nErreur de saisie, choisissez une option valide.", end='')
+        print("\nErreur de saisie, choisissez une option valide :", end='')
 
     @staticmethod
-    def player_already_selected():
-        print("\nJoueur déjà sélectionné. Choisissez un autre joueur.")
+    def player_out_of_bounds():
+        print("\nNuméro de joueur hors limites. Choisissez un autre joueur :")
 
     @staticmethod
     def other_report():
@@ -179,3 +178,7 @@ class MenuViews:
     @staticmethod
     def need_text():
         print("\nSaisie obligatoire", end='')
+
+    @staticmethod
+    def date_error():
+        print("\nDate incorrecte", end='')

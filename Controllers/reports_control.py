@@ -6,7 +6,7 @@ from Views.reports import Reports
 class ReportsController:
 
     def __init__(self):
-        self.menu_view = MenuViews()
+        # MenuViews = MenuViews()
         self.reports_view = Reports()
 
     def all_players_name(self, players):
@@ -68,17 +68,21 @@ class ReportsController:
 
         @return : Sélection utilisateur, liste info tournoi
         """
+        from Controllers.menu_control import MenuController
         tournaments = Tournament.load_tournament_db()
-        self.menu_view.select_tournament(tournaments)
-        self.menu_view.input_option()
+        MenuViews.select_tournament(tournaments)
+        MenuViews.input_option()
         user_input = input()
-
+        # Contrôle de saisie
+        length_menu = len(tournaments)
+        valid_strings = ["r"]
+        response = MenuController.input_validation(user_input, length_menu, valid_strings)
+        while response is False:
+            MenuViews.input_error()
+            user_input = input()
+            response = MenuController.input_validation(user_input, length_menu, valid_strings)
         if user_input == "r":
             self.back_to_menu()
-        result = self.numeric(user_input)
-        if result is False:
-            self.menu_view.input_error()
-            self.tournament_select()
         else:
             return user_input, tournaments
 
@@ -86,14 +90,3 @@ class ReportsController:
     def back_to_menu():
         from Controllers.menu_control import MenuController
         MenuController().main_menu_start()
-
-    @staticmethod
-    def numeric(user_input):
-        """Détermine si "user_input" est une valeur numérique
-        """
-        try:
-            int(user_input)
-            result = True
-        except ValueError:
-            result = False
-        return result

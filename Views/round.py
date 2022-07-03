@@ -7,16 +7,16 @@ class RoundViews:
         self.table = PrettyTable()
 
         self.round_field_names = [
-            "Match #",
-            "Name P1",
-            "rank P1",
-            "Score P1",
-            "Color P1",
+            "# Match #",
+            "Joueur 1",
+            "Rang J1",
+            "Score J1",
+            "Couleur J1",
             " ",
-            "Name P2",
-            "rank P2",
-            "Score P2",
-            "Color P2"
+            "Joueur 2",
+            "Rang J2",
+            "Score J2",
+            "Couleur J2"
         ]
 
         self.results_field_names = [
@@ -33,9 +33,8 @@ class RoundViews:
         """
         self.table.clear()
         self.table.field_names = self.round_field_names
-
         for i in range(len(matches)):
-            row = list(matches[i])
+            row = list((matches[i]))
             row.insert(0, str(i+1))
             row.insert(5, "vs.")
 
@@ -61,7 +60,7 @@ class RoundViews:
 
         print("\n\n- RESULTATS -\n")
         print(f"{t.name.upper()}, {t.place.title()} | Description : {t.description}")
-        print(f"Start : {t.date} | Contrôle du temps : {t.time_control}\n")
+        print(f"Débuté : {t.date} | Terminé : {t.end_date} | Contrôle du temps : {t.time_control}\n")
 
         print(self.table)
 
@@ -91,8 +90,8 @@ class RoundViews:
     def score_options(match_number):
         print("\nMatch ", match_number)
         print('[0] Match nul')
-        print('[1] Player 1 gagne')
-        print('[2] Player 2 gagne')
+        print('[1] Joueur 1 gagne')
+        print('[2] Joueur 2 gagne')
         print("\n[r] Retour au menu principal")
 
     @staticmethod

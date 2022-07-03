@@ -8,7 +8,6 @@ from Views.menu import MenuViews
 class TournamentController:
 
     def __init__(self):
-        self.menu_view = MenuViews()
         self.round_view = RoundViews()
         self.timer = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -18,7 +17,7 @@ class TournamentController:
         Enregistre le temps (y/m/d-h-m-s) des débuts et fin de rounds.
         """
         if tournament.current_round == 1:
-            tournament.date = self.timer
+            tournament.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             tournament.update_timer(tournament.date, 'date')
 
             self.first_round(tournament)
@@ -30,13 +29,17 @@ class TournamentController:
                 tournament.current_round += 1
                 tournament.update_tournament_db()
 
-        elif 1 < tournament.current_round <= tournament.nb_rounds:
+            tournament.end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            tournament.update_timer(tournament.end_date, 'end_date')
+            self.tournament_end(tournament)
+
+        elif tournament.current_round <= tournament.nb_rounds:
             while tournament.current_round <= tournament.nb_rounds:
                 self.next_round(tournament)
                 tournament.current_round += 1
                 tournament.update_tournament_db()
 
-            tournament.end_date = self.timer
+            tournament.end_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             tournament.update_timer(tournament.end_date, 'end_date')
             self.tournament_end(tournament)
 
@@ -48,7 +51,9 @@ class TournamentController:
             Premier round : top players contre down players
             Construction des matches par rangs
         """
-        round_x = Round("Round 1", self.timer, "Non terminé")
+        from Controllers.menu_control import MenuController
+        str_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        round_x = Round("Round 1", str_datetime, "Non terminé")
         tournament.sort_players_by_rang()
         top_players, down_players = tournament.split_players()
         self.round_view.round_header(tournament, round_x.start_datetime)
@@ -60,16 +65,21 @@ class TournamentController:
         self.round_view.display_matches(round_x.matches)
 
         self.round_view.round_over()
-        self.menu_view.input_option()
-        user_input = input().lower()
+        MenuViews.input_option()
+        user_input = input()
         scores_list = []
-        # cohérence saisie
-        while user_input not in str(["o", "r"]) or user_input == '':
+        length_menu = 0
+        valid_strings = ["o", "r"]
+        # contrôle de saisie
+        result = MenuController.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
             self.round_view.round_over()
-            self.menu_view.input_option()
-            user_input = input().lower()
+            MenuViews.input_option()
+            user_input = input()
+            result = MenuController.input_validation(user_input, length_menu, valid_strings)
         if user_input == "o":
-            round_x.end_datetime = self.timer
+            round_x.end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             tournament.rounds.append(round_x.set_round())
             tournament.merge_players(top_players, down_players)
 
@@ -82,7 +92,9 @@ class TournamentController:
         """
         Rounds suivants et construction des matches par scores
         """
-        round_x = Round(("Round " + str(tournament.current_round)), self.timer, "Non terminé")
+        from Controllers.menu_control import MenuController
+        str_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        round_x = Round(("Round " + str(tournament.current_round)), str_datetime, "Non terminé")
         tournament.sort_players_by_score()
         self.round_view.round_header(tournament, round_x.start_datetime)
 
@@ -112,16 +124,21 @@ class TournamentController:
         self.round_view.display_matches(round_x.matches)
 
         self.round_view.round_over()
-        self.menu_view.input_option()
-        user_input = input().lower()
+        MenuViews.input_option()
+        user_input = input()
         scores_list = []
-        # cohérence saisie
-        while user_input not in str(["o", "r"]) or user_input == '':
+        length_menu = 0
+        valid_strings = ["o", "r"]
+        # contrôle de saisie
+        result = MenuController.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
             self.round_view.round_over()
-            self.menu_view.input_option()
-            user_input = input().lower()
+            MenuViews.input_option()
+            user_input = input()
+            result = MenuController.input_validation(user_input, length_menu, valid_strings)
         if user_input == "o":
-            round_x.end_datetime = self.timer
+            round_x.end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             tournament.rounds.append(round_x.set_round())
             self.end_round(scores_list, tournament)
 
@@ -169,7 +186,7 @@ class TournamentController:
         return players_without_match, players_with_match
 
     def end_round(self, scores_list: list, tournament):
-        """Fin de round : récuoères les scores
+        """Fin de round : récupère les scores
 
         @paramètres tournament : liste infos tournoi
         @paramètres scores_list : liste des scores
@@ -188,7 +205,7 @@ class TournamentController:
     def get_score(self, response, scores_list: list):
         """Saisie des scores pour chaque match du round courant
 
-        @paramètres "response" : saisie score du match (0, 1 ou 2)
+        @paramètres "response" : saisie du score d'un match (0, 1 ou 2)
         @paramètres "scores_list": liste des scores
         @return : Liste des scores saisis
         """
@@ -219,7 +236,7 @@ class TournamentController:
 
     @staticmethod
     def update_player_lists(player_1, player_2, players_without_match, players_with_match):
-        """Mise à jour des listes de joueurs avec ou sans match atrribué:
+        """Mise à jour des listes de joueurs avec ou sans match atrribué :
         Paramètre "player_1" : joueur 1 (dict)
         Paramètre "player_2" : joueur 2 (dict)
         Paramètre "players_without_match" : liste de joueurs sans match attribué dans le round courant
@@ -244,20 +261,25 @@ class TournamentController:
         Possibilité de modifier les rangs
         @paramètre "tournament" : tournoi courant (dict)
         """
+        from Controllers.menu_control import MenuController
         tournament.sort_players_by_rang()
         tournament.sort_players_by_score()
 
         self.round_view.display_results(tournament)
 
-        self.menu_view.update_rank()
+        MenuViews.update_rank()
         user_input = input()
 
         players = tournament.players
-        # Cohérence saisie
-        while user_input not in str(["o", "n", "r"]) or user_input == '':
-            self.menu_view.update_rank()
+        length_menu = 0
+        valid_strings = ["o", "n"]
+        # contrôle de saisie
+        result = MenuController.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            MenuViews.update_rank()
             user_input = input()
-
+            result = MenuController.input_validation(user_input, length_menu, valid_strings)
         if user_input == "n":
             self.back_to_menu()
 
@@ -267,22 +289,25 @@ class TournamentController:
 
     def update_ranks(self, players):
         """Modifie les rangs
-
         @paramètres "players": Liste des joueurs du tournoi
         """
-        self.menu_view.select_players(players, "à modifier")
-        self.menu_view.input_option()
+        from Controllers.menu_control import MenuController
+        MenuViews.select_players(players, "à modifier")
+        MenuViews.input_option()
         user_input = input()
-        # Cohérence saisie
+        length_menu = len(players)
+        valid_strings = ["r"]
         id_players = []
         for i in range(len(players)):
             id_players.append(players[i]['id'])
-            if isinstance(user_input, (int, float)):
-                int_user_input = int(user_input)
-                while int_user_input not in id_players or int_user_input == 0:
-                    self.menu_view.input_option()
-                    user_input = input()
-                    int_user_input = int(user_input)
+            # contrôle de saisie
+            result = MenuController.input_validation(user_input, length_menu, valid_strings)
+            while result is False:
+                MenuViews.input_error()
+                MenuViews.input_option()
+                user_input = input()
+                result = MenuController.input_validation(user_input, length_menu, valid_strings)
+
         if user_input == "r":
             self.back_to_menu()
 
@@ -298,9 +323,19 @@ class TournamentController:
                     p['rank']
                 )
 
-                self.menu_view.rank_update_header(p)
-                self.menu_view.input_text("un nouveau rang")
+                MenuViews.rank_update_header(p)
+                MenuViews.input_text("un nouveau rang")
                 user_input = input()
+                length_menu = 10000
+                valid_strings = ["r"]
+                # contrôle de saisie
+                result = MenuController.input_validation(user_input, length_menu, valid_strings)
+                while result is False:
+                    MenuViews.input_error()
+                    MenuViews.rank_update_header(p)
+                    MenuViews.input_text("un nouveau rang")
+                    user_input = input()
+                    result = MenuController.input_validation(user_input, length_menu, valid_strings)
 
                 if user_input == "r":
                     self.back_to_menu()
@@ -321,10 +356,16 @@ class TournamentController:
         Verifie la cohérence de la saisie scores
         retour response : réponse saisie utilisateur
         """
+        from Controllers.menu_control import MenuController
         self.round_view.score_input_option()
         response = input()
-        while response not in str([0, 1, 2, "r"]) or response == '':
-            self.menu_view.input_error()
+        length_menu = [0, 1, 2]
+        valid_strings = ["r"]
+        # saisie obligatoire et cohérence
+        result = MenuController.input_validation(response, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
             self.round_view.score_input_option()
             response = input()
+            result = MenuController.input_validation(response, length_menu, valid_strings)
         return response

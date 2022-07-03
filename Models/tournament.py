@@ -3,13 +3,25 @@ from tinydb import TinyDB
 
 class Tournament:
     """Tournoi d'échecs avec règles suisses"""
-    def __init__(self, t_id: int, name: str, place: str, date: str, time_control: str,
-                 current_round: int, players: list, rounds=list, nb_rounds=4,
-                 description=""):
+    def __init__(
+            self,
+            t_id: int,
+            name: str,
+            place: str,
+            date: str,
+            end_date: str,
+            time_control: str,
+            current_round: int,
+            players: list,
+            rounds=list,
+            nb_rounds=4,
+            description=""
+    ):
         self.t_id = t_id
         self.name = name
         self.place = place
         self.date = date
+        self.end_date = end_date
         self.time_control = time_control
         self.current_round = current_round
         self.players = players
@@ -25,6 +37,7 @@ class Tournament:
             "name": self.name,
             "place": self.place,
             "date": self.date,
+            "end_date": self.end_date,
             "time_control": self.time_control,
             "current_round": self.current_round,
             "players": self.players,
