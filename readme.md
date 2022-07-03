@@ -32,22 +32,22 @@ Testé sous Windows 11 - Python version 3.10.5
 #### 1. Windows :
    Depuis votre terminal, naviguez vers le dossier racine souhaité.
 ##### Récupération du projet
-   Tapez :     
-   $   git clone https://github.com/Cyl94700/P4_Op_Cl.git
+   Tapez :    
+       git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
 ##### Accéder au dossier du projet, créer et activer l'environnement virtuel
    Tapez :
-   $ cd P4_Op_Cl
-   $ python -m venv env 
-   $ ~env\scripts\activate
+       cd P4_Op_Cl
+       python -m venv env 
+       ~env\scripts\activate
     
 ##### Installer les paquets requis
    Tapez :
-   $ pip install -r requirements.txt
+       pip install -r requirements.txt
 
 ##### Lancer le programme
    Tapez :
-   $ python main.py
+      python main.py
 
 
 <div id='id-section1-2'></div>
@@ -58,21 +58,21 @@ Testé sous Windows 11 - Python version 3.10.5
    Depuis votre terminal, naviguez vers le dossier souhaité.
 ##### Récupération du projet
    Tapez :
-    $ git clone https://github.com/Cyl94700/P4_Op_Cl.git
+        git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
 ##### Activer l'environnement virtuel
    Tapez :
-    $ cd P4_Op_Cl
-    $ python -m venv env 
-    $ source env/bin/activate
+       cd P4_Op_Cl
+       python -m venv env 
+       source env/bin/activate
     
 ##### Installer les paquets requis
    Tapez :
-    $ pip install -r requirements.txt
+       pip install -r requirements.txt
 
 ##### Lancer le programme
    Tapez :
-    $ python3 main.py
+       python3 main.py
 
 
 ----------
@@ -89,11 +89,10 @@ Testé sous Windows 11 - Python version 3.10.5
 <div id='id-section2-2'></div>
 
 #### 2. Générer un nouveau rapport
-Supprimez le dossier "flake8_report" contenant le dernier rapport (fichier "index.html")
+   Supprimez le dossier "flake8_report" contenant le dernier rapport (fichier "index.html")
 
-Depuis votre terminal tapez :
-
-   $ flake8 --format=html --htmldir=flake8_report
+   Depuis votre terminal tapez :
+       flake8 --format=html --htmldir=flake8_report
 
 Le dossier "flake8_report" est de nouveau généré avec le rapport   ("index.html") à l'intérieur.
 
