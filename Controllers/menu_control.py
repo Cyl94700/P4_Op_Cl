@@ -30,7 +30,7 @@ class MenuController:
         result = self.input_validation(user_input, length_menu, valid_strings)
         if result is True:
             if user_input == "1":
-                    self.new_tournament()
+                self.new_tournament()
 
             elif user_input == "2":
                 self.load_tournament()
