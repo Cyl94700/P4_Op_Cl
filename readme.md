@@ -24,29 +24,30 @@ Testé sous Windows 11 - Python version 3.10.5
 
 <div id='id-section1'></div>
 
-## 1. Installation du projet
+### 1. Installation du projet
 
 <div id='id-section1-1'></div>
 
 
 #### 1. Windows :
    Depuis votre terminal, naviguez vers le dossier racine souhaité.
-###### Récupération du projet
-         
-   $ Tapez :  git clone https://github.com/Cyl94700/P4_Op_Cl.git
+##### Récupération du projet
+   Tapez :     
+   $   git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
-###### Accéder au dossier du projet, créer et activer l'environnement virtuel
+##### Accéder au dossier du projet, créer et activer l'environnement virtuel
    Tapez :
    $ cd P4_Op_Cl
    $ python -m venv env 
    $ ~env\scripts\activate
     
-###### Installer les paquets requis
+##### Installer les paquets requis
    Tapez :
-    $ pip install -r requirements.txt
+   $ pip install -r requirements.txt
 
-###### Lancer le programme
-    $ python main.py
+##### Lancer le programme
+   Tapez :
+   $ python main.py
 
 
 <div id='id-section1-2'></div>
@@ -55,19 +56,22 @@ Testé sous Windows 11 - Python version 3.10.5
 
 ####  2. MacOS et Linux :
    Depuis votre terminal, naviguez vers le dossier souhaité.
-###### Récupération du projet
-
+##### Récupération du projet
+   Tapez :
     $ git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
-###### Activer l'environnement virtuel
+##### Activer l'environnement virtuel
+   Tapez :
     $ cd P4_Op_Cl
     $ python -m venv env 
     $ source env/bin/activate
     
-###### Installer les paquets requis
+##### Installer les paquets requis
+   Tapez :
     $ pip install -r requirements.txt
 
-###### Lancer le programme
+##### Lancer le programme
+   Tapez :
     $ python3 main.py
 
 
@@ -75,7 +79,7 @@ Testé sous Windows 11 - Python version 3.10.5
 <div id='id-section2'></div>
 
 
-## 2. Rapport flake8
+### 2. Rapport flake8
 
 <div id='id-section2-1'></div>
 
@@ -97,7 +101,7 @@ Le dossier "flake8_report" est de nouveau généré avec le rapport   ("index.ht
 
 <div id='id-section3'></div>
 
-## 3. Fonctionnement de l'apllication
+### 3. Fonctionnement de l'apllication
 
 <div id='id-section3-1'></div>
 
