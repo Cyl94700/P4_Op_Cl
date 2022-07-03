@@ -33,20 +33,24 @@ Testé sous Windows 11 - Python version 3.10.5
    Depuis votre terminal, naviguez vers le dossier racine souhaité.
 ##### Récupération du projet
    Tapez :    
+
        git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
 ##### Accéder au dossier du projet, créer et activer l'environnement virtuel
    Tapez :
+
        cd P4_Op_Cl
        python -m venv env 
        ~env\scripts\activate
     
 ##### Installer les paquets requis
    Tapez :
+
        pip install -r requirements.txt
 
 ##### Lancer le programme
    Tapez :
+
       python main.py
 
 
@@ -58,20 +62,24 @@ Testé sous Windows 11 - Python version 3.10.5
    Depuis votre terminal, naviguez vers le dossier souhaité.
 ##### Récupération du projet
    Tapez :
-        git clone https://github.com/Cyl94700/P4_Op_Cl.git
+
+       git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
 ##### Activer l'environnement virtuel
    Tapez :
+
        cd P4_Op_Cl
        python -m venv env 
        source env/bin/activate
     
 ##### Installer les paquets requis
    Tapez :
+
        pip install -r requirements.txt
 
 ##### Lancer le programme
    Tapez :
+
        python3 main.py
 
 
