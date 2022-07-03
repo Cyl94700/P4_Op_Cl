@@ -3,22 +3,22 @@
 # Projet 4 DA-Python OC
 ***Livrable : application de gestion de tournoi d'échecs avec base de données TinyDB.***
 
-_Testé sous Windows 11 - Python version 3.10.5
+Testé sous Windows 11 - Python version 3.10.5
 
 
 ## Menu
 
 1. [Installation du projet](#id-section1)
-    a[Windows](#id-section1-1)
-    b[MacOS et Linux](#id-section1-2)
+    1. [Windows](#id-section1-1)
+    2. [MacOS et Linux](#id-section1-2)
    
 2. [Rapport flake8](#section2)
-    a[Dernier rapport flake8 généré](#id-section2-1)
-    b[Générer un nouveau rapport](#id-section2.2)
+    1. [Dernier rapport flake8 généré](#id-section2-1)
+    2. [Générer un nouveau rapport](#id-section2.2)
 
 3. [Fonctionnement de l'application](#id-section3)
-    a[Principe général](#section3-1)
-    b[Menu](#section3-2)
+    1. [Principe général](#section3-1)
+    2. [Exemples](#section3-2)
 
 
 
@@ -29,23 +29,23 @@ _Testé sous Windows 11 - Python version 3.10.5
 <div id='id-section1-1'></div>
 
 
-#### a. Windows :
+#### 1. Windows :
    Depuis votre terminal, naviguez vers le dossier racine souhaité.
-####### Récupération du projet
+###### Récupération du projet
          
    $ Tapez :  git clone https://github.com/Cyl94700/P4_Op_Cl.git
 
-####### Accéder au dossier du projet, créer et activer l'environnement virtuel
+###### Accéder au dossier du projet, créer et activer l'environnement virtuel
    Tapez :
    $ cd P4_Op_Cl
    $ python -m venv env 
    $ ~env\scripts\activate
     
-####### Installer les paquets requis
+###### Installer les paquets requis
    Tapez :
     $ pip install -r requirements.txt
 
-####### Lancer le programme
+###### Lancer le programme
     $ python main.py
 
 
@@ -53,7 +53,7 @@ _Testé sous Windows 11 - Python version 3.10.5
 
 ---------
 
-####  b. MacOS et Linux :
+####  2. MacOS et Linux :
    Depuis votre terminal, naviguez vers le dossier souhaité.
 ###### Récupération du projet
 
@@ -79,12 +79,12 @@ _Testé sous Windows 11 - Python version 3.10.5
 
 <div id='id-section2-1'></div>
 
-#### a. Dernier rapport flake8 généré
+#### 1. Dernier rapport flake8 généré
 ![dernier_flake8](Images/dernier_flake8.png)
 
 <div id='id-section2-2'></div>
 
-#### b. Générer un nouveau rapport
+#### 2. Générer un nouveau rapport
 Supprimez le dossier "flake8_report" contenant le dernier rapport (fichier "index.html")
 
 Depuis votre terminal tapez :
@@ -97,14 +97,14 @@ Le dossier "flake8_report" est de nouveau généré avec le rapport   ("index.ht
 
 <div id='id-section3'></div>
 
-## 3. Fonctionneùent de l'apllication
+## 3. Fonctionnement de l'apllication
 
 <div id='id-section3-1'></div>
 
-#### a. Principe général
+#### 1. Principe général
 
 <div id='id-section3-2'></div>
 
-#### b. Menu
+#### 1. Menu
 
 
