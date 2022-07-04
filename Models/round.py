@@ -3,10 +3,7 @@ from Models.match import Match
 
 """
 class Round:
-#Round d'un tournoi
-def __init__(self, name, matches):
-self.name = name
-self.matches = matches
+Round d'un tournoi
 """
 
 
@@ -33,11 +30,6 @@ class Round:
         ]
 
     def get_match_pairing(self, player_1, player_2):
-        """objet match en tuple"""
-        # colors = []
-        # colors = Match.assign_colors(self)
-        # color_player1 = colors[0]
-        # color_player2 = colors[1]
 
         match = Match(
             f"{player_1['last_name']}, {player_1['first_name']}",
@@ -49,5 +41,4 @@ class Round:
             player_2["score"],
             player_2["color"])
 
-        # for i in range(1):
         self.matches.append(match[1])

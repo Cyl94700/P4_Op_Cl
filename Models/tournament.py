@@ -79,14 +79,14 @@ class Tournament:
         db.update({'t_id': self.t_id}, doc_ids=[self.t_id])
 
     def update_tournament_db(self):
-        """Update tournament info (after each round) in database"""
+        """Modifie un tournoi  après chaque round en base"""
         db = self.tournaments_db
         db.update({'rounds': self.rounds}, doc_ids=[self.t_id])
         db.update({'players': self.players}, doc_ids=[self.t_id])
         db.update({'current_round': self.current_round}, doc_ids=[self.t_id])
 
     def update_timer(self, timer, info):
-        """Update start or end timer of tournament
+        """Modifie la date start ou end time
 
         @param timer: date and time info (str)
         @param info: start or end time (str)
@@ -96,9 +96,9 @@ class Tournament:
 
     @staticmethod
     def load_tournament_db():
-        """Load tournament database
+        """Chargement d'un tournoi depuis la base
 
-        @return: list of tournaments
+        @return: liste des tournois
         """
         db = TinyDB('database/tournaments.json')
         db.all()

@@ -19,7 +19,7 @@ class MenuController:
                       "Charger un tournoi",
                       "Créer un joueur",
                       "Modifier un joueur",
-                      "Rapport",
+                      "Rapports",
                       ]
         MenuViews.main_menu(menu_lines)
         MenuViews.input_option()
@@ -105,7 +105,6 @@ class MenuController:
             MenuViews.input_error()
             MenuViews.review_tournament(tournament_info, tour_players)
             user_input = input()
-            # contrôle de saisie
             result = self.input_validation(user_input, length_menu, valid_strings)
         if user_input == "o":
             tournament = Tournament(
@@ -148,6 +147,13 @@ class MenuController:
         MenuViews.time_control_option()
         MenuViews.input_option()
         user_input = input()
+        # saisie obligatoire et cohérence
+        length_menu = [1, 2, 3]
+        valid_strings = []
+        result = self.input_validation(user_input, length_menu, valid_strings)
+        while result is False:
+            MenuViews.input_error()
+            self.input_time_control()
 
         if user_input == "1":
             return "Bullet"
@@ -155,10 +161,6 @@ class MenuController:
             return "Blitz"
         elif user_input == "3":
             return "Rapid"
-
-        else:
-            MenuViews.input_error()
-            self.input_time_control()
 
     def select_players(self, players_total):
         """Choix des joueurs d'un Tournoi
@@ -203,9 +205,9 @@ class MenuController:
         MenuViews.select_tournament(tournament)
         MenuViews.input_option()
         user_input = input()
+        # contrôle de saisie
         length_menu = int(len(tournament))
         valid_strings = ["r"]
-        # contrôle de saisie
         result = self.input_validation(user_input, length_menu, valid_strings)
         while result is False:
             MenuViews.input_error()
@@ -509,15 +511,7 @@ class MenuController:
         # Retour
         elif user_input == "r":
             self.main_menu_start()
-        """
-        # else:
-        if len(players) == 8:
-            MenuViews.input_error()
-            self.player_reports_sorting(players)
-        else:
-            MenuViews.input_error()
-            self.player_reports_sorting(Player.load_player_db())
-        """
+
     @staticmethod
     def input_control_required_data(user_input):
         """Saisie touche Entrée non autorisée
